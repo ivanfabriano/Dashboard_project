@@ -1,3 +1,5 @@
+import bcrypt from "bcrypt";
+
 const AccountModel = (sequelize: any, Sequelize: any) => {
   const Accounts = sequelize.define("Account", {
     account_username: {
@@ -51,6 +53,21 @@ const AccountModel = (sequelize: any, Sequelize: any) => {
         },
       },
     },
+  }, {
+    hooks: {
+      beforeCreate: async (Account: any) => {
+       if (Account.account_password) {
+        const salt = await bcrypt.genSaltSync(10, 'a');
+        Account.account_password = bcrypt.hashSync(Account.account_password, salt);
+       }
+      },
+      beforeUpdate:async (Account: any) => {
+       if (Account.account_password) {
+        const salt = await bcrypt.genSaltSync(10, 'a');
+        Account.account_password = bcrypt.hashSync(Account.account_password, salt);
+       }
+      }
+     },
   });
 
   return Accounts;

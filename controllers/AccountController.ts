@@ -19,7 +19,7 @@ const Account = {
 
       const account = await Service.Creating(dbMaster, data);
 
-      res.status(201).json(Service.responseBuilder("success", "Create Data Success", account));
+      res.status(201).json(Service.responseBuilder("success", "Create Data Success", {username: username, role: role}));
     } catch (err: any) {
       res.status(400).json(Service.responseBuilder("error", err , []));
     }
