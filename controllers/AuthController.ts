@@ -3,6 +3,7 @@ import Service from "../services";
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
 import dotenv from "dotenv";
+import nodemailer from "nodemailer";
 import db from "../models";
 
 dotenv.config();
@@ -11,6 +12,7 @@ const AccessToken: any = process.env.TOKEN_SECRET;
 const RefreshToken: any = process.env.RTOKEN_SECRET;
 
 const dbMaster = db.accounts;
+const dbSecondary = db.blacklists;
 
 const Auth = {
     async Login(req: express.Request, res: express.Response): Promise<void> {
@@ -46,9 +48,73 @@ const Auth = {
             }
 
         }catch(err: any){
-            res.status(400).json(Service.responseBuilder("error", err, []));
+            res.status(400).json(Service.responseBuilder("error", "Login failed", []));
         }
-    }
+    },
+
+    async Logout(req: express.Request, res: express.Response): Promise<void> {
+        try{
+            const { accessToken , refreshToken } = req.body;
+
+            const data = {
+                token: accessToken, 
+                refreshToken: refreshToken
+            };
+
+            const blacklist = await Service.Creating(dbSecondary, data);
+
+            res.status(200).json(Service.responseBuilder("success", "Logout success", []))
+        }catch(err: any){
+            res.status(400).json(Service.responseBuilder("error", "Logout failed", []));
+        }
+    },
+
+    async RefreshToken(req: express.Request, res: express.Response): Promise<void> {
+        try{
+            const { oldRefreshToken } = req.body;
+
+            if(!oldRefreshToken || oldRefreshToken === ""){
+                res.status(400).json(Service.responseBuilder("error", "refresh token not exist", []));
+            }else{
+                jwt.verify(oldRefreshToken, RefreshToken, async (err: any, user: any) => {
+                    if(err){
+                        res.status(403).json(Service.responseBuilder("error", "Invalid refresh Token", []));
+                    }else{
+
+                        const blacklistToken = await Service.FindingCustom(dbSecondary, {refreshToken: oldRefreshToken});
+
+                        if(!blacklistToken === null){
+                            res.status(403).json(Service.responseBuilder("error", "Refresh token is disabled", []));
+                        }else{
+                            const argsToken = {
+                                username: user.account_username,
+                                role: user.account_role_id,
+                                email: user.account_email
+                            };
+    
+                            const accessToken = jwt.sign(argsToken, AccessToken, { expiresIn: "300s" });
+                            const refreshToken = jwt.sign(argsToken, RefreshToken, { expiresIn: "1200s" });
+    
+                            const data = {
+                                accessToken: accessToken,
+                                refreshToken: refreshToken
+                            };
+    
+                            res.status(200).json(Service.responseBuilder("success", "Token renewal success", data));
+                        }
+
+                    }
+                })
+            }
+
+        }catch(err){
+            res.status(400).json(Service.responseBuilder("error", "refresh token failed", []));
+        }
+    },
+
+    // async ForgotPassword(req: express.Request, res: express.Response): Promise<void> {
+        
+    // }
 }
 
 export default Auth;
