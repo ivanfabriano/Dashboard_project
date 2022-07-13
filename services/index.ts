@@ -6,6 +6,7 @@ import FindingCustom from "./FindCustom";
 import responseBuilder from "./ResponseBuilder";
 import Uploading from "./UploadFile";
 import Deleting from "./DeleteData";
+import SendingEmail from "./SendEmail";
 
 const Service = {
   Creating,
@@ -16,6 +17,7 @@ const Service = {
   responseBuilder,
   Uploading,
   Deleting,
+  SendingEmail
 };
 
 export default Service;

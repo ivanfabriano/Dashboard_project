@@ -25,6 +25,7 @@ app.listen(process.env.SERVER_PORT, () =>
 );
 
 app.post("/v1/login/", Auth.Login);
+app.post("/v1/forgot/", Auth.ForgotPassword);
 
 app.post("/v1/accounts/", Account.Create);
 app.put("/v1/accounts/:id", Account.Update);

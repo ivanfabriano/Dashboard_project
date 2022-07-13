@@ -8,6 +8,7 @@ import ProjectModel from "./Projects";
 import DetailProjectModel from "./DetailProjects";
 import ClientModel from "./Clients";
 import MeetingModel from "./MeetingMethod";
+import ForgotModel from "./ForgotPasswords";
 import BlacklistModel from "./BlacklistTokens";
 
 dotenv.config();
@@ -49,6 +50,7 @@ db.meetingMethods = MeetingModel(sequelize, Sequelize);
 db.clients = ClientModel(sequelize, Sequelize);
 db.detailProjects = DetailProjectModel(sequelize, Sequelize);
 db.blacklists = BlacklistModel(sequelize, Sequelize);
+db.forgotpasswords = ForgotModel(sequelize, Sequelize);
 
 db.projects.hasMany(db.detailProjects, {
   foreignKey: "detail_project_id",
