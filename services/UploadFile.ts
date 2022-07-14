@@ -1,5 +1,5 @@
-const Uploading = (file: any, path: string, filename: string) => {
-  file.mv(`public/assets/${path}/` + filename);
+const Uploading = (file: any, filename: string) => {
+  file.mv(`assets/files/` + filename);
 };
 
 export default Uploading;

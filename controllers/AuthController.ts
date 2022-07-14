@@ -13,7 +13,6 @@ const RefreshToken: any = process.env.RTOKEN_SECRET;
 
 const dbMaster = db.accounts;
 const dbSecondary = db.blacklists;
-const dbAccount = db.accounts;
 const dbForgot = db.forgotpasswords;
 
 const Auth = {
@@ -115,33 +114,63 @@ const Auth = {
     },
 
     async ForgotPassword(req: express.Request, res: express.Response): Promise<void> {
-        const { email } = req.body;
-
-        const validEmail = await Service.FindingCustom(dbAccount, { account_email: email});
-
-        if( validEmail === null){
-            res.status(400).json(Service.responseBuilder("error", "Email does not exist", []));
-        }else{
-            const data = {
-                user_id: validEmail.id,
-                unix_id: Math.random().toString(36).substring(2,100),
-                status: true
-            }
-            const sendEMail = Service.SendingEmail(email, data.unix_id);
+        try{
+            const { email } = req.body;
     
-            if(sendEMail){
-
-                const forgotList = await Service.Creating(dbForgot, data);
-
-                res.status(200).json(Service.responseBuilder("success", "Check your email for renewal password", []));
+            const validEmail = await Service.FindingCustom(dbMaster, { account_email: email});
+    
+            if( validEmail === null){
+                res.status(400).json(Service.responseBuilder("error", "Email does not exist", []));
             }else{
-                res.status(400).json(Service.responseBuilder("error", "Email send failed", []));
-            
-        }
-
+                const data = {
+                    user_id: validEmail.id,
+                    unix_id: Math.random().toString(36).substring(2,100),
+                    status: true
+                }
+                const sendEMail = Service.SendingEmail(email, data.unix_id);
+        
+                if(sendEMail){
+    
+                    const forgotList = await Service.Creating(dbForgot, data);
+    
+                    res.status(200).json(Service.responseBuilder("success", "Check your email for renewal password", []));
+                }else{
+                    res.status(400).json(Service.responseBuilder("error", "Email send failed", []));
+                
+            }}
+        }catch(err: any){
+            res.status(400).json(Service.responseBuilder("error", err, []));
         }
         
-    }
+    },
+
+    async RenewalPassword(req: express.Request, res: express.Response): Promise<void> {
+        try{
+            const { newPassword } = req.body;
+            const { id } = req.params;
+            
+            const validUnix = await Service.FindingCustom(dbForgot, { unix_id: id, status: true });
+    
+            if(validUnix === null){
+                res.status(400).json(Service.responseBuilder("error", "Invalid unix id", []));
+            }else{
+                const data = {
+                    account_password: newPassword
+                };
+
+                const data2 = {
+                    status: false
+                };
+
+                const updatePassword = await Service.Updating(dbMaster, data, validUnix.user_id);
+                const updateForgot = await Service.Updating(dbMaster, data2, validUnix.id);
+
+                res.status(200).json(Service.responseBuilder("success", "Update password success", []));
+            }
+        }catch(err: any){
+            res.status(400).json(Service.responseBuilder("error", err, []));
+        }
+    },
 }
 
 export default Auth;

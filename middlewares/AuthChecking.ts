@@ -34,8 +34,6 @@ const AuthCheck = async (
           token: token,
         });
 
-        console.log(blacklistToken);
-
         if (blacklistToken === null) {
           next();
         } else {

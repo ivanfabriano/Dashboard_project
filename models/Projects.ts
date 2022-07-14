@@ -39,6 +39,9 @@ const ProjectModel = (sequelize: any, Sequelize: any) => {
         },
       },
     },
+    project_filename: {
+      type: Sequelize.STRING,
+    }
   });
 
   return Projects;

@@ -1,6 +1,8 @@
 import express from "express";
 import dotenv from "dotenv";
 import db from "./models";
+import fileUpload from "express-fileupload";
+import cors from "cors";
 
 import AuthCheck from "./middlewares/AuthChecking";
 
@@ -16,6 +18,14 @@ dotenv.config();
 
 const app = express();
 app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
+app.use(fileUpload());
+
+app.use(
+  cors({
+  origin: "*"
+  })
+);
 
 
 // db.sequelize.sync({ alter: true });
@@ -52,9 +62,11 @@ app.get("/v1/detailprojects/:id", DetailProject.FindOne);
 app.delete("/v1/detailprojects/", DetailProject.Delete);
 
 app.post("/v1/projects/", Project.Create);
+app.post("/v1/projects/upload/:id", Project.Upload);
 app.put("/v1/projects/:id", Project.Update);
 app.get("/v1/projects/", Project.FindAll);
 app.get("/v1/projects/:id", Project.FindOne);
+app.get("/v1/projects/download/:id", Project.Download);
 app.delete("/v1/projects/", Project.Delete);
 
 app.post("/v1/meetingmethods/", MeetingMethod.Create);
