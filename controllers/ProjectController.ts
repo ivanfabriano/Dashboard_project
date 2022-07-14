@@ -9,14 +9,15 @@ const dbClient = db.clients;
 const Project = {
   async Create(req: express.Request, res: express.Response): Promise<void> {
     try {
-      const { projectName, projectClientId, projectPic, projectContact } = req.body;
+      const { projectName, projectClientId, projectPic, projectContact, projectEditor } = req.body;
 
       const data = {
         project_name: projectName,
         project_client_id: projectClientId,
         project_pic: projectPic,
         project_contact: projectContact,
-        project_filename: null
+        project_filename: null,
+        project_editor: projectEditor
       };
 
       const project = await Service.Creating(dbMaster, data);
@@ -29,14 +30,15 @@ const Project = {
 
   async Update(req: express.Request, res: express.Response): Promise<void> {
     try{
-      const { projectName, projectClientId, projectPic, projectContact } = req.body;
+      const { projectName, projectClientId, projectPic, projectContact, projectEditor } = req.body;
       const { id } = req.params;
 
       const data = {
         project_name: projectName,
         project_client_id: projectClientId,
         project_pic: projectPic,
-        project_contact: projectContact
+        project_contact: projectContact,
+        project_editor: projectEditor
       };
       const project = await Service.Updating(dbMaster, data, id);
 

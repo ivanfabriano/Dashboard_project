@@ -41,7 +41,15 @@ const ProjectModel = (sequelize: any, Sequelize: any) => {
     },
     project_filename: {
       type: Sequelize.STRING,
-    }
+    },
+    project_editor: {
+      type: Sequelize.STRING,
+      validate: {
+        notEmpty: {
+          msg: "Editor must be not empty",
+        },
+      },
+    },
   });
 
   return Projects;
