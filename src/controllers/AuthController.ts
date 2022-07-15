@@ -19,11 +19,10 @@ const Auth = {
     async Login(req: express.Request, res: express.Response): Promise<void> {
         try{
             const { username, password } = req.body;
-            const salt: string = await bcrypt.genSalt(10);
             const account = await Service.FindingCustom(dbMaster, {account_username: username});
 
             if(account === null){
-                res.status(401).json(Service.responseBuilder("error", "User does not exist", []));
+                res.status(401).json(Service.responseBuilder("error", "Username does not exist", []));
             }else{
                 const validPassword  = await bcrypt.compare(password, account.account_password);
 
