@@ -3,7 +3,6 @@ import Service from "../services";
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
 import dotenv from "dotenv";
-import nodemailer from "nodemailer";
 import db from "../models";
 
 dotenv.config();

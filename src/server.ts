@@ -63,11 +63,13 @@ app.delete("/v1/detailprojects/", DetailProject.Delete);
 
 app.post("/v1/projects/", Project.Create);
 app.post("/v1/projects/upload/:id", Project.Upload);
+app.get("/v1/projects/search/", Project.Search);
+app.get("/v1/projects/filter/", Project.Filter);
 app.put("/v1/projects/:id", Project.Update);
 app.get("/v1/projects/", Project.FindAll);
 app.get("/v1/projects/:id", Project.FindOne);
 app.get("/v1/projects/download/:id", Project.Download);
-app.delete("/v1/projects/", Project.Delete);
+app.delete("/v1/projects/:id", Project.Delete);
 
 app.post("/v1/meetingmethods/", MeetingMethod.Create);
 app.put("/v1/meetingmethods/:id", MeetingMethod.Update);

@@ -1,4 +1,4 @@
-import { Sequelize } from "sequelize";
+import { Sequelize, Op } from "sequelize";
 import pg from "pg";
 import dotenv from "dotenv";
 
@@ -42,6 +42,7 @@ sequelize
 const db: any = {};
 db.Sequelize = Sequelize;
 db.sequelize = sequelize;
+db.Op = Op;
 
 db.accounts = AccountModel(sequelize, Sequelize);
 db.roles = RoleModel(sequelize, Sequelize);

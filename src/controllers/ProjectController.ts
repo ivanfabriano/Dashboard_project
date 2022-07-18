@@ -6,6 +6,8 @@ const dbMaster = db.projects;
 const dbJoin = db.detailProjects;
 const dbClient = db.clients;
 
+const Op = db.Op;
+
 const Project = {
   async Create(req: express.Request, res: express.Response): Promise<void> {
     try {
@@ -63,6 +65,28 @@ const Project = {
       const { id } = req.params;
 
       const project = await Service.FindingOne(dbMaster, id, [dbJoin, dbClient]);
+      res.status(200).json(Service.responseBuilder("success", "Find data success", project));
+    }catch(err: any){
+      res.status(400).json(Service.responseBuilder("error", err, []));
+    }
+  },
+
+  async Search(req: express.Request, res: express.Response): Promise<void>{
+    try{
+      const title = req.query.title;
+
+      const project = await Service.FindingCustom(dbMaster, {project_name: {[Op.iLike]: `%${title}%`}});
+      res.status(200).json(Service.responseBuilder("success", "Find data success", project));
+    }catch(err: any){
+      res.status(400).json(Service.responseBuilder("error", err, []));
+    }
+  },
+
+  async Filter(req: express.Request, res: express.Response): Promise<void>{
+    try{
+      const id = req.query.id;
+
+      const project = await Service.FindingCustom(dbMaster, {project_client_id: id});
       res.status(200).json(Service.responseBuilder("success", "Find data success", project));
     }catch(err: any){
       res.status(400).json(Service.responseBuilder("error", err, []));

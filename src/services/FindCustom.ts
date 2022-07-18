@@ -1,5 +1,5 @@
 const FindingCustom = (db: any, query: object) => {
-  const data = db.findOne({where: query});
+  const data = db.findAll({where: query});
 
   return data;
 };
