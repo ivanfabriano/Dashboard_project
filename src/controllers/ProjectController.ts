@@ -109,6 +109,7 @@ const Project = {
       const { id } = req.params;
 
       if (!req.files) {
+        const project = await Service.Deleting(dbMaster, id);
         res.status(400).json(Service.responseBuilder("error", "File does not exist", []));
       } else {
         const file: any = req.files.file;
@@ -123,6 +124,9 @@ const Project = {
       }
 
     }catch(err: any){
+      const { id } = req.params;
+      
+      const project = await Service.Deleting(dbMaster, id);
       res.status(400).json(Service.responseBuilder("error", err, []));
     }
   },
