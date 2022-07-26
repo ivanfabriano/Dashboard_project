@@ -5,6 +5,8 @@ import db from "../models";
 const dbMaster = db.projects;
 const dbJoin = db.detailProjects;
 const dbClient = db.clients;
+const dbMethod = db.meetingMethods;
+
 
 const Op = db.Op;
 
@@ -52,7 +54,7 @@ const Project = {
 
   async FindAll(req: express.Request, res: express.Response): Promise<void>{
     try{
-      const project = await Service.FindingAll(dbMaster, [dbJoin, dbClient]);
+      const project = await Service.FindingAll(dbMaster, dbClient);
 
       res.status(200).json(Service.responseBuilder("success", "Find all data success", project));
     }catch(err: any){
@@ -64,7 +66,7 @@ const Project = {
     try{
       const { id } = req.params;
 
-      const project = await Service.FindingOne(dbMaster, id, [dbJoin, dbClient]);
+      const project = await Service.FindingOne(dbMaster, id, [dbClient, {model: dbJoin, include: [dbMethod]}]);
       res.status(200).json(Service.responseBuilder("success", "Find data success", project));
     }catch(err: any){
       res.status(400).json(Service.responseBuilder("error", err, []));

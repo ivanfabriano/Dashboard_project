@@ -3,6 +3,7 @@ import Service from "../services";
 import db from "../models";
 
 const dbMaster = db.detailProjects;
+const dbJoin = db.meetingMethods;
 
 const Client = {
   async Create(req: express.Request, res: express.Response): Promise<void> {
@@ -35,6 +36,8 @@ const Client = {
 
       res.status(201).json(Service.responseBuilder("success", "Create Data Success", detailProject));
     } catch (err: any) {
+      console.log(err);
+      
       res.status(400).json(Service.responseBuilder("error", err , []));
     }
   },
@@ -75,7 +78,7 @@ const Client = {
 
   async FindAll(req: express.Request, res: express.Response): Promise<void>{
     try{
-      const detailProject = await Service.FindingAll(dbMaster);
+      const detailProject = await Service.FindingAll(dbMaster, dbJoin);
 
       res.status(200).json(Service.responseBuilder("success", "Find all data success", detailProject));
     }catch(err: any){
@@ -87,7 +90,7 @@ const Client = {
     try{
       const { id } = req.params;
 
-      const detailProject = await Service.FindingOne(dbMaster, id);
+      const detailProject = await Service.FindingOne(dbMaster, id, dbJoin);
       res.status(200).json(Service.responseBuilder("success", "Find data success", detailProject));
     }catch(err: any){
       res.status(400).json(Service.responseBuilder("error", err, []));

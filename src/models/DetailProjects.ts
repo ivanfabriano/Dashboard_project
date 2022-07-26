@@ -28,11 +28,11 @@ const DetailProjectModel = (sequelize: any, Sequelize: any) => {
       },
     },
     detail_attendee: {
-      type: Sequelize.INTEGER,
+      type: Sequelize.STRING,
       allowNull: false,
       validate: {
         notEmpty: {
-          msg: "Attendee field must be not empty",
+          msg: "Date field must be not empty",
         },
       },
     },
