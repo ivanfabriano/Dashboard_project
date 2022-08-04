@@ -73,7 +73,7 @@ const Auth = {
             const { oldRefreshToken } = req.body;
 
             if(!oldRefreshToken || oldRefreshToken === ""){
-                res.status(400).json(Service.responseBuilder("error", "refresh token not exist", []));
+                res.status(400).json(Service.responseBuilder("error", "refresh token is not exist", []));
             }else{
                 jwt.verify(oldRefreshToken, RefreshToken, async (err: any, user: any) => {
                     if(err){
