@@ -18,8 +18,8 @@ const DetailProjectModel = (sequelize: any, Sequelize: any) => {
         },
       },
     },
-    detail_method_id: {
-      type: Sequelize.INTEGER,
+    detail_method: {
+      type: Sequelize.STRING,
       allowNull: false,
       validate: {
         notEmpty: {

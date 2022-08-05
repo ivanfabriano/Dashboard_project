@@ -3,7 +3,6 @@ import Service from "../services";
 import db from "../models";
 
 const dbMaster = db.detailProjects;
-const dbJoin = db.meetingMethods;
 
 const Client = {
   async Create(req: express.Request, res: express.Response): Promise<void> {
@@ -11,7 +10,7 @@ const Client = {
       const { 
         detailTime, 
         detailLocation, 
-        detailMethodId, 
+        detailMethod, 
         detailAttendee, 
         detailActivity, 
         detailProgress, 
@@ -23,7 +22,7 @@ const Client = {
       const data = {
         detail_time: detailTime,
         detail_location: detailLocation,
-        detail_method_id: detailMethodId,
+        detail_method: detailMethod,
         detail_attendee: detailAttendee,
         detail_activity: detailActivity,
         detail_progress: detailProgress,
@@ -48,7 +47,7 @@ const Client = {
       const { 
         detailTime, 
         detailLocation, 
-        detailMethodId, 
+        detailMethod, 
         detailAttendee, 
         detailActivity, 
         detailProgress, 
@@ -60,7 +59,7 @@ const Client = {
       const data = {
         detail_time: detailTime,
         detail_location: detailLocation,
-        detail_method_id: detailMethodId,
+        detail_method: detailMethod,
         detail_attendee: detailAttendee,
         detail_activity: detailActivity,
         detail_progress: detailProgress,
@@ -78,7 +77,7 @@ const Client = {
 
   async FindAll(req: express.Request, res: express.Response): Promise<void>{
     try{
-      const detailProject = await Service.FindingAll(dbMaster, dbJoin);
+      const detailProject = await Service.FindingAll(dbMaster);
 
       res.status(200).json(Service.responseBuilder("success", "Find all data success", detailProject));
     }catch(err: any){
@@ -90,7 +89,7 @@ const Client = {
     try{
       const { id } = req.params;
 
-      const detailProject = await Service.FindingOne(dbMaster, id, dbJoin);
+      const detailProject = await Service.FindingOne(dbMaster, id);
       res.status(200).json(Service.responseBuilder("success", "Find data success", detailProject));
     }catch(err: any){
       res.status(400).json(Service.responseBuilder("error", err, []));

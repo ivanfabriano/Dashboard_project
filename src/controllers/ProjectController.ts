@@ -58,6 +58,8 @@ const Project = {
 
       res.status(200).json(Service.responseBuilder("success", "Find all data success", project));
     }catch(err: any){
+      console.log(err);
+      
       res.status(400).json(Service.responseBuilder("error", err, []));
     }
   },
@@ -66,7 +68,9 @@ const Project = {
     try{
       const { id } = req.params;
 
-      const project = await Service.FindingOne(dbMaster, id, [dbClient, {model: dbJoin, include: [dbMethod]}]);
+      const project = await Service.FindingOne(dbMaster, id, dbJoin);
+      // const project = await Service.FindingOne(dbMaster, id, [dbClient, {model: dbJoin, include: [dbMethod]}]);
+
       res.status(200).json(Service.responseBuilder("success", "Find data success", project));
     }catch(err: any){
       res.status(400).json(Service.responseBuilder("error", err, []));

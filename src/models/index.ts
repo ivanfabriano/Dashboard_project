@@ -60,13 +60,6 @@ db.detailProjects.belongsTo(db.projects, {
   foreignKey: "detail_project_id",
 });
 
-db.meetingMethods.hasMany(db.detailProjects, {
-  foreignKey: "detail_method_id",
-});
-db.detailProjects.belongsTo(db.meetingMethods, {
-  foreignKey: "detail_method_id",
-});
-
 db.clients.hasMany(db.projects, {
   foreignKey: "project_client_id",
 });
